@@ -5,81 +5,81 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CANNON — Race Condition Evidence Generator</title>
 
-  <!-- Only load the obfuscated JS in production -->
+  <!-- Production: load ONLY the obfuscated JS -->
   <script src="cannon.obfuscated.js" defer></script>
 
   <style>
     :root{
-      --bg: #f6f7fb;
-      --card: #ffffff;
-      --text: #111827;
-      --muted: #6b7280;
-      --line: #e5e7eb;
-      --blue: #2563eb;
-      --blue2: #1d4ed8;
-      --green: #16a34a;
-      --green2: #15803d;
-      --shadow: 0 12px 30px rgba(0,0,0,.08);
+      --bg0:#07090d;
+      --bg1:#0b0f17;
+      --card:#0f1624;
+      --card2:#0c1320;
+      --line: rgba(255,255,255,.10);
+      --line2: rgba(255,255,255,.14);
+      --text:#e7ecf6;
+      --muted: rgba(231,236,246,.70);
+      --muted2: rgba(231,236,246,.55);
+      --accent:#7c5cff;
+      --accent2:#3f8cff;
+      --good:#22c55e;
+      --bad:#ef4444;
+      --shadow: 0 18px 45px rgba(0,0,0,.55);
       --radius: 14px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
 
-    * { box-sizing: border-box; }
-
+    *{ box-sizing:border-box; }
     body{
-      margin: 0;
-      padding: 0;
+      margin:0;
       font-family: var(--sans);
-      background: var(--bg);
       color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 10% 0%, rgba(124,92,255,.14), transparent 55%),
+        radial-gradient(1000px 700px at 90% 10%, rgba(63,140,255,.12), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      min-height:100vh;
     }
 
-    .page{
-      max-width: 1080px;
-      margin: 36px auto;
-      padding: 0 18px 60px;
+    .wrap{
+      max-width: 1100px;
+      margin: 34px auto 60px;
+      padding: 0 16px;
     }
 
-    .header{
+    .top{
       display:flex;
-      flex-direction:column;
-      gap:10px;
-      margin-bottom: 18px;
-    }
-
-    .titleRow{
-      display:flex;
+      justify-content: space-between;
       align-items:flex-end;
-      justify-content:space-between;
-      gap: 12px;
+      gap: 16px;
       flex-wrap: wrap;
+      margin-bottom: 14px;
     }
 
     h1{
-      margin: 0;
-      font-size: 2.0rem;
+      margin:0;
+      font-size: 2rem;
       letter-spacing: -0.02em;
       line-height: 1.1;
     }
 
-    .tag{
+    .badge{
       display:inline-flex;
       align-items:center;
-      gap:8px;
-      padding: 6px 10px;
+      gap:10px;
+      padding: 8px 12px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: #fff;
+      background: rgba(255,255,255,.03);
       color: var(--muted);
       font-size: .92rem;
       white-space: nowrap;
     }
 
-    .subtitle{
-      margin: 0;
+    .sub{
+      margin: 6px 0 18px;
       color: var(--muted);
-      line-height: 1.4;
+      line-height: 1.45;
       max-width: 920px;
     }
 
@@ -91,13 +91,13 @@
 
     @media (min-width: 980px){
       .grid{
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1.05fr .95fr;
         align-items:start;
       }
     }
 
     .card{
-      background: var(--card);
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -111,44 +111,70 @@
       align-items:center;
       justify-content:space-between;
       gap: 10px;
+      background: rgba(255,255,255,.02);
     }
 
     .cardHeader h2{
-      margin: 0;
-      font-size: 1.05rem;
+      margin:0;
+      font-size: 1.02rem;
       letter-spacing: -0.01em;
+      color: var(--text);
+    }
+
+    .small{
+      font-size: .9rem;
+      color: var(--muted2);
     }
 
     .cardBody{
       padding: 16px;
     }
 
-    .hint{
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: .92rem;
-      line-height: 1.35;
-    }
-
     textarea{
-      width: 100%;
-      min-height: 210px;
-      resize: vertical;
-      padding: 12px 12px;
+      width:100%;
       border-radius: 12px;
       border: 1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      color: var(--text);
       font-family: var(--mono);
       font-size: 13px;
-      line-height: 1.35;
+      line-height: 1.38;
+      padding: 12px;
       outline: none;
-      background: #fff;
+      resize: vertical;
+    }
+    #reqInput{ min-height: 260px; }
+    #pyOutput{ min-height: 260px; }
+
+    input, select{
+      width:100%;
+      height: 42px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      color: var(--text);
+      padding: 8px 10px;
+      outline: none;
+      font-size: 14px;
     }
 
-    textarea:focus,
-    input:focus,
-    select:focus{
-      border-color: rgba(37, 99, 235, .55);
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, .10);
+    textarea:focus, input:focus, select:focus{
+      border-color: rgba(124,92,255,.55);
+      box-shadow: 0 0 0 4px rgba(124,92,255,.15);
+    }
+
+    label{
+      font-size: .92rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+      display:block;
+    }
+
+    .hint{
+      margin-top: 8px;
+      color: var(--muted2);
+      font-size: .92rem;
+      line-height: 1.35;
     }
 
     .controls{
@@ -158,161 +184,130 @@
     }
 
     @media (min-width: 560px){
-      .controls{
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
+      .controls{ grid-template-columns: 1fr 1fr; }
+      .span2{ grid-column: 1 / -1; }
     }
 
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
-    }
-
-    label{
-      font-size: .92rem;
-      color: #374151;
-    }
-
-    input, select{
-      height: 42px;
-      padding: 8px 10px;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      font-size: 14px;
-      outline: none;
-      background: #fff;
-    }
-
-    .fullRow{
-      grid-column: 1 / -1;
-    }
+    .field{ display:flex; flex-direction:column; }
 
     .actions{
       display:flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 12px;
+      margin-top: 14px;
     }
 
     button{
-      border: 0;
+      border: none;
       border-radius: 12px;
       padding: 11px 14px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
       font-size: 14px;
+      letter-spacing: .02em;
     }
 
     #generateBtn{
-      background: var(--blue);
+      background: linear-gradient(90deg, rgba(124,92,255,1), rgba(63,140,255,1));
       color: #fff;
     }
-    #generateBtn:hover{ background: var(--blue2); }
+    #generateBtn:hover{ filter: brightness(1.05); }
 
     #copyBtn{
-      background: var(--green);
-      color: #fff;
+      background: linear-gradient(90deg, rgba(34,197,94,1), rgba(16,185,129,1));
+      color: #04120a;
     }
-    #copyBtn:hover{ background: var(--green2); }
+    #copyBtn:hover{ filter: brightness(1.05); }
 
     .chips{
       display:flex;
       flex-wrap:wrap;
       gap: 8px;
-      margin-top: 8px;
+      margin-top: 10px;
     }
 
     .chip{
       padding: 7px 10px;
-      border: 1px solid var(--line);
+      border: 1px solid var(--line2);
       border-radius: 999px;
       cursor: pointer;
-      user-select: none;
-      font-size: 0.9rem;
-      background: #fff;
-      color: #111827;
-      transition: background .15s ease, border-color .15s ease, transform .05s ease;
+      user-select:none;
+      font-size: .9rem;
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      transition: transform .06s ease, background .15s ease, border-color .15s ease;
     }
     .chip:hover{
-      background: #f3f4f6;
-      border-color: #d1d5db;
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.22);
     }
-    .chip:active{
-      transform: translateY(1px);
-    }
+    .chip:active{ transform: translateY(1px); }
 
-    .mutedInline{
-      color: var(--muted);
-      font-size: .92rem;
+    .mutedRow{
+      margin-top: 8px;
+      color: var(--muted2);
+      font-size: .9rem;
     }
 
     .footerNote{
-      margin-top: 14px;
-      padding: 12px 14px;
-      border: 1px dashed var(--line);
+      margin-top: 12px;
+      padding: 12px 12px;
       border-radius: 12px;
-      color: var(--muted);
-      background: #fff;
+      border: 1px dashed rgba(255,255,255,.14);
+      background: rgba(255,255,255,.02);
+      color: var(--muted2);
       line-height: 1.4;
       font-size: .92rem;
     }
 
-    .mini{
-      font-size: .86rem;
-      color: var(--muted);
-    }
-
-    .mono{
-      font-family: var(--mono);
-    }
+    .mono{ font-family: var(--mono); }
   </style>
 </head>
 
 <body>
-  <div class="page">
-    <div class="header">
-      <div class="titleRow">
+  <div class="wrap">
+    <div class="top">
+      <div>
         <h1>CANNON</h1>
-        <div class="tag">Race Condition • Evidence Mode • Python Generator</div>
+        <div class="sub">
+          Paste a Burp raw request or a curl command. Cannon generates a Python “Evidence Mode” script
+          that runs synchronized request bursts (max 10 threads) and outputs artifacts (JSONL/CSV/Summary).
+          <span class="small">Authorized testing only.</span>
+        </div>
       </div>
-      <p class="subtitle">
-        Paste a Burp raw request or a curl command. Cannon generates a Python evidence script that fires synchronized bursts
-        (max 10 threads) and produces report-ready artifacts (JSONL/CSV/Summary). Use only on systems you’re authorized to test.
-      </p>
+      <div class="badge">Race Condition • Evidence Mode • Python Generator</div>
     </div>
 
     <div class="grid">
-
-      <!-- LEFT: Input -->
+      <!-- Left: Request input -->
       <div class="card">
         <div class="cardHeader">
-          <h2>1) Paste Request</h2>
-          <span class="mini">Burp raw HTTP or curl</span>
+          <h2>1) Request</h2>
+          <div class="small">Burp raw HTTP or curl</div>
         </div>
         <div class="cardBody">
+          <label for="reqInput">Paste request</label>
           <textarea id="reqInput" placeholder="Paste raw HTTP request or curl here..."></textarea>
+
           <div class="hint">
-            Raw request example: <span class="mono">POST /redeem HTTP/2</span> + headers + blank line + JSON body.
-            Curl example: <span class="mono">curl -X POST https://target/api -H 'Content-Type: application/json' -d '{...}'</span>.
+            Raw request format: <span class="mono">POST /path HTTP/2</span> + headers + blank line + body.<br/>
+            Curl format: <span class="mono">curl -X POST https://target/api -H 'Content-Type: application/json' -d '{...}'</span>
           </div>
 
           <div class="footerNote">
-            Tip: For best “definitive” proof, choose a state-changing endpoint (redeem/apply/claim/checkout) and set a success
-            condition that reflects a real outcome.
+            Tip: For definitive race evidence, test endpoints with a single-use or exclusive outcome (redeem/apply/claim/checkout)
+            and set a success condition that truly indicates “success.”
           </div>
         </div>
       </div>
 
-      <!-- RIGHT: Settings -->
+      <!-- Right: Settings -->
       <div class="card">
         <div class="cardHeader">
-          <h2>2) Evidence Settings</h2>
-          <span class="mini">Threads capped at 10</span>
+          <h2>2) Settings</h2>
+          <div class="small">Threads capped at 10</div>
         </div>
         <div class="cardBody">
-
           <div class="controls">
 
             <div class="field">
@@ -321,7 +316,7 @@
                 <option value="https" selected>https</option>
                 <option value="http">http</option>
               </select>
-              <div class="hint">Used only if your raw request has a path like <span class="mono">POST /api</span> + <span class="mono">Host:</span>.</div>
+              <div class="hint">Used only if the raw request contains a path + Host header.</div>
             </div>
 
             <div class="field">
@@ -330,13 +325,15 @@
                 <option value="json" selected>JSON Path Equals</option>
                 <option value="match">Match String</option>
               </select>
-              <div class="hint">Pick a stable indicator for SUCCESS so Cannon can detect mixed outcomes.</div>
+              <div class="hint">This determines SUCCESS vs FAIL for evidence output.</div>
             </div>
 
+            <!-- JSON mode -->
             <div class="field" id="jsonPathWrap">
               <label for="jsonPath">JSON Path (comma-separated)</label>
-              <input id="jsonPath" type="text" placeholder="data,redeem,success" value="data,redeem,success" />
-              <div class="hint">Example: <span class="mono">data,redeem,success</span></div>
+              <!-- IMPORTANT CHANGE: NOT prefilled -->
+              <input id="jsonPath" type="text" placeholder="data,redeem,success" value="" />
+              <div class="hint">Leave blank until Cannon suggests the right path, or type your own.</div>
             </div>
 
             <div class="field" id="jsonValueWrap">
@@ -345,16 +342,17 @@
               <div class="hint">Examples: <span class="mono">true</span>, <span class="mono">false</span>, <span class="mono">123</span>, <span class="mono">"ok"</span></div>
             </div>
 
+            <!-- Match mode -->
             <div class="field" id="matchFieldWrap" style="display:none;">
               <label for="matchString">Match String</label>
-              <input id="matchString" type="text" placeholder="success" />
-              <div class="hint">Example: <span class="mono">"redeemed"</span> or <span class="mono">"transactionId"</span></div>
+              <input id="matchString" type="text" placeholder="transactionId" />
+              <div class="hint">Use a stable substring that appears only on success.</div>
             </div>
 
             <div class="field">
-              <label for="concurrency">Concurrency (threads)</label>
+              <label for="concurrency">Concurrency</label>
               <input id="concurrency" type="number" min="1" max="10" value="5" />
-              <div class="hint">Synchronized burst size. Cannon enforces max 10.</div>
+              <div class="hint">Burst size. Cannon caps at 10.</div>
             </div>
 
             <div class="field">
@@ -366,52 +364,51 @@
             <div class="field">
               <label for="timeout">Timeout (seconds)</label>
               <input id="timeout" type="number" min="1" max="300" value="15" />
-              <div class="hint">Per request timeout.</div>
+              <div class="hint">Per-request timeout.</div>
             </div>
 
             <div class="field">
               <label for="maxSnippet">Max Snippet (chars)</label>
               <input id="maxSnippet" type="number" min="50" max="5000" value="800" />
-              <div class="hint">How much response text to store per request in artifacts.</div>
+              <div class="hint">How much response text is saved per request.</div>
             </div>
 
-            <div class="field fullRow">
+            <div class="field span2">
               <label for="targetKeys">Target Keys (optional, comma-separated)</label>
               <input id="targetKeys" type="text" placeholder="orderId,transactionId,redeemId" value="" />
               <div class="hint">
-                Leave blank unless you want “definitive” proof grouping. Cannon will suggest keys found in the request below.
+                Leave blank unless you want definitive “same-object” grouping. Suggestions appear below after parsing.
               </div>
 
-              <!-- Auto-suggest area -->
-              <div class="mutedInline" style="margin-top:10px;">Suggested Target Keys (click to add)</div>
+              <div class="mutedRow">Suggested Target Keys (click to add)</div>
               <div id="suggestedKeys" class="chips"></div>
             </div>
 
           </div>
 
           <div class="actions">
-            <button id="generateBtn" type="button">Generate Evidence Script</button>
-            <button id="copyBtn" type="button">Copy Script</button>
+            <button id="generateBtn" type="button">GENERATE</button>
+            <button id="copyBtn" type="button">COPY</button>
           </div>
 
           <div class="hint" style="margin-top:10px;">
-            Output includes: <span class="mono">cannon_*_results.jsonl</span>, <span class="mono">cannon_*_results.csv</span>,
-            <span class="mono">cannon_*_summary.txt</span>.
+            Output files: <span class="mono">cannon_*_results.jsonl</span>, <span class="mono">cannon_*_results.csv</span>, <span class="mono">cannon_*_summary.txt</span>
           </div>
-
         </div>
       </div>
 
-      <!-- FULL-WIDTH OUTPUT -->
+      <!-- Full width output -->
       <div class="card" style="grid-column: 1 / -1;">
         <div class="cardHeader">
-          <h2>3) Generated Python Script</h2>
-          <span class="mini">Paste into a .py file and run</span>
+          <h2>3) Generated Python</h2>
+          <div class="small">Evidence Mode script</div>
         </div>
         <div class="cardBody">
-          <textarea id="pyOutput" readonly placeholder="Your Python evidence script will appear here..."></textarea>
+          <label for="pyOutput">Generated script</label>
+          <textarea id="pyOutput" readonly placeholder="Generated Python evidence script will appear here..."></textarea>
+
           <div class="hint">
-            If you see <span class="mono">ModuleNotFoundError: requests</span> install it with:
+            If you hit <span class="mono">ModuleNotFoundError: requests</span> run:
             <span class="mono">python3 -m pip install requests</span>
           </div>
         </div>
